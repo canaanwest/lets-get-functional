@@ -15,63 +15,48 @@ const customers = require("./data/customers.json");
  * 
  * Code and test your solutions in index.js. Customer data is available to you in the Array, customers. 
  * Utilizing your lodown library, write functions that take the Array of customers and return the following (console.log() the results):
-
-
-
-5Find the average balance of all the customers.
-
-7Find how many customers’ friends’ names begin with an arbitrary letter. Write a function to answer this question, then log an answer.
-
-8Find the names of all customers who are friends with a given customer (by name). i.e. Which customers have that customer’s name in their friends list?
-
  */
  
+
+// customer data is located in the array >>> customers;
  
- // customer data is located in the array >>> customers;
- 
+
 //NUMBER 1: Find the number of males
-
 function maleCustomers(people){
-    var dudes = _.reduce(people, (prevDudes, currentDude, i)=>{
-        if(people[i]["gender"] === "male"){ return prevDudes += 1} else { return prevDudes;}}, 0);
-        
-        return "There are " + dudes + " male customers."
+    var dudes = _.reduce(people, (prevDudes, currentPerson, i, people)=>{
+        if(currentPerson["gender"] === "male"){ return prevDudes += 1} else {return prevDudes;}}, 0);
+    
+    return "There are " + dudes + " male customers."
 }    
-
 console.log(maleCustomers(customers));
 
 
 
 
-
-
 //NUMBER 2: Find the number of females
-
 function femaleCustomers(people){  
     var ladies = _.reduce(people, (prevGals, currentGal, i) => 
         {if(people[i]["gender"] === "female"){return prevGals += 1} else { return prevGals }}, 0);
-        
-        
+    
     return "There are " + ladies + " female customers. "
 }
-
 console.log(femaleCustomers(customers));
 
 
 
 
 //NUMBER 3: Find the name and age of the oldest customer
-
 function oldestCustomer(people){
-var oldAge = 0;
-var oldName = "";
-_.each(people, function(val, i, col){
-    if (people[i]["age"] > oldAge){
-        oldAge = people[i]["age"];
-        oldName = people[i]["name"];
-    }});
+    var oldAge = 0;
+    var oldName = "";
+   
+    _.each(people, function(val, i, col){
+        if (people[i]["age"] > oldAge){
+            oldAge = people[i]["age"];
+            oldName = people[i]["name"];
+        }});
 
-return "The oldest person is " + oldName+ ", at " +oldAge+ " years old."
+    return "The oldest person is " + oldName+ ", at " +oldAge+ " years old."
 }
 
 console.log(oldestCustomer(customers));
@@ -79,23 +64,21 @@ console.log(oldestCustomer(customers));
 
 
 //NUMBER 4: Find the name and age of the youngest customer. 
-
 function youngestPerson(people){
-var youngAge = 200;
-var youngName = "";
+    var youngAge = 200;
+    var youngName = "";
 
-_.each(people, function(val, i, col){
-    if (people[i]["age"] < youngAge){
-        youngAge = people[i]["age"];
-        youngName = people[i]["name"];
-    } else if (people[i]["age"] === youngAge){
-        youngName += " and " + people[i]["name"]; 
-    }
+    _.each(people, function(val, i, col){
+        if (people[i]["age"] < youngAge){
+            youngAge = people[i]["age"];
+            youngName = people[i]["name"];
+        } else if (people[i]["age"] === youngAge){
+            youngName += " and " + people[i]["name"]; 
+        }
 })
     return "The youngest people are " + youngName + ", at " + youngAge + " years old.";
     
 }
-
 console.log(youngestPerson(customers));
 
 
@@ -126,7 +109,9 @@ function nameStartsWith(char){
         if (customers[i]["name"].charAt(0).toUpperCase() === char.toUpperCase()){
             count += 1; 
         }  
-}) 
+        
+    })
+    
 return "There are " + count + " names that start with " + char.toUpperCase();
 };
 
@@ -151,8 +136,7 @@ function friendsWithNames(people, char){
     _.each(allFriends, function(friendObj, i, allFriends){
         if (allFriends[i]["name"].charAt(0).toUpperCase() === char.toUpperCase()){
             count += 1;
-        }
-    })
+        }})
     return "There were " +count+ " friends of customers whose names began with " + char + "."
     
 }
@@ -184,76 +168,66 @@ console.log(friendsWith(customers, "Shelly Walton"));
 
 
 
-//NUMBER 9: Find out which 3 tags were the most common among customers;
-function whichTags(people){
-    var theTags = []; 
+//NUMBER 9: DO OVER w/ Recursion: Find out which 3 tags were the most common among customers;
+function whichTags2(people){
+    var theTags = {}; 
+    var inOrder = [];
     //this block of code gets all of the tags into an array for counting
     _.each(people, function(person, i, people){
         if (people[i].hasOwnProperty("tags")){
             _.each(people[i]["tags"], function(tag, j, tags){
-                theTags.push(tag);
+                if (!theTags.hasOwnProperty(tag)){
+                 theTags[tag] = 1;   
+                } else {
+                    theTags[tag] += 1;
+                }
             })
         }
     })
-    
-    var sansDups = _.unique(theTags);   // this gets them into an array without duplicates
-    var occurance = {};                 //empty object for pushing to.
-    _.each(sansDups, function(tag, i, sansDups){
-        occurance[tag] = 0; //sets every unique tag up with a value pair of 0.
-    })
-    
-    
-    _.each(theTags, function(tag, i, theTags){
-        _.each(sansDups, function(sDup, j, sansDups){
-          if (theTags[i] === sansDups[j]){
-              occurance[sansDups[j]] += 1;      //this allows the function to count the occurances by adding 1 for each occurance
-          }  
-        })
-    })
-    
-    //need a function that identifies the one with the greatest occurance.
+
+
     var greatestOccurance = 0;
-    var popTag = "";
-    _.each(occurance, function(timesOccured, tag, occurance){
-        if (occurance[tag] > greatestOccurance){
-            greatestOccurance = occurance[tag];
+    _.each(theTags, function(timesOccured, tag, theTags){
+        if (theTags[tag] > greatestOccurance){
+            greatestOccurance = theTags[tag];
         }
     })
     
-    var mostPopular = [];
-    _.each(occurance, function(timesOccured, tag, occurance){
-        if (timesOccured === greatestOccurance){
-            mostPopular.push(tag);
-            popTag += tag + ", "
+    
+    function pushToInOrder(greatestOccurance){
+        if (greatestOccurance === 0){
+            return inOrder;
         }
-    })
+        
+        for (var keys in theTags){
+            if(theTags[keys] === greatestOccurance){
+                inOrder.push(keys);
+            }
+        }
+       
+        return pushToInOrder(greatestOccurance-1)
 
+    }
     
-    //console.log(greatestOccurance)        //test
-    //console.log(popTag);                  //test
-   // console.log(`There were ${mostPopular.length} most popular tags. They were ${popTag} with ${greatestOccurance} customers each.`)
-    return "There were " + mostPopular.length + " most popular tags. They were " +popTag+ " with " +greatestOccurance+ " customers each."
-    
-    //want to iterate throughout the tags and get them all into a single array
-    //want to count the number of times a given tag happens in an array
-}; 
+    pushToInOrder(greatestOccurance);
+    var top3 = _.first(inOrder, 3);
+    return "The top 3 tags are " + top3;
+}
 
-console.log(whichTags(customers));
+console.log(whichTags2(customers));
+
+
 
 
 //NUMBER 10: Find a summary of genders using the .reduce funciton.
 function genderBreakdown(people){
     var genders = {};
-    _.each(people, function(person, i, people){
-        if (genders.hasOwnProperty(person["gender"]) === false){
-            genders[person["gender"]] = 0; 
-        }
-    })
-    
     _.reduce(people, function(total, nextInLine, i){
-        if (genders.hasOwnProperty(people[i]["gender"])){
+        if (!genders.hasOwnProperty(people[i]["gender"])){
+            return genders[people[i]["gender"]] = 1;
+        } else if (genders.hasOwnProperty(people[i]["gender"])){ 
             return genders[people[i]["gender"]] += 1;
-        } else { return total;
+        } else {return total;
     }}
     , 0)
         
