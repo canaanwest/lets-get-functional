@@ -95,7 +95,7 @@ function balance(people){
     _.each(monies, function(amt, i, coll){newMoney.push(Number.parseFloat(amt));});
     _.each(newMoney, function(val, i, newMoney){ total += val; avgBalance = total/(i+1)})
  
- return "The average balance of the customers is " + avgBalance + " dollars.";
+ return "The average balance of the customers is " + Math.round(avgBalance*100)/100 + " dollars.";
 }
 console.log(balance(customers));
 
