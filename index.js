@@ -95,7 +95,7 @@ function balance(people){
     _.each(monies, function(amt, i, coll){newMoney.push(Number.parseFloat(amt));});
     _.each(newMoney, function(val, i, newMoney){ total += val; avgBalance = total/(i+1)})
  
- return "The average balance of the customers is " + Math.round(avgBalance*100)/100 + " dollars.";
+ return "The average balance of the customers is $" + Math.round(avgBalance*100)/100;
 }
 console.log(balance(customers));
 
@@ -115,7 +115,7 @@ function nameStartsWith(char){
 return "There are " + count + " names that start with " + char.toUpperCase();
 };
 
-console.log(nameStartsWith("b")); 
+console.log(nameStartsWith("a")); 
 
 
 
@@ -145,7 +145,7 @@ function friendsWithNames(people, char){
 
 
 
-console.log(friendsWithNames(customers, "S"));
+console.log(friendsWithNames(customers, "d"));
 
 
 //NUMBER 8: Find all customers who are friends with a given customer.
@@ -163,7 +163,7 @@ function friendsWith(people, person){ //@params: list of people, customer whose 
    return person + " was found in the friends list of " + customersFriends; 
 }
 
-console.log(friendsWith(customers, "Shelly Walton"));
+console.log(friendsWith(customers, "Olga Newton"));
 
 
 
